@@ -1,63 +1,41 @@
-package furgl.stupidThings.common.item;
+package AkaH.stupidThings.common.item;
+
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.Component;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.level.Level;
 
 import java.util.List;
 
-import furgl.stupidThings.common.sound.ModSoundEvents;
-import furgl.stupidThings.util.ICustomTooltip;
-import furgl.stupidThings.util.TooltipHelper;
-import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Items;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.EnumActionResult;
-import net.minecraft.util.EnumHand;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.text.TextFormatting;
-import net.minecraft.world.World;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
-import net.minecraftforge.oredict.OreDictionary;
+public class ItemRubberChicken extends Item {
+    public ItemRubberChicken(Properties properties) {
+        super(properties.stacksTo(1));
+    }
 
-public class ItemRubberChicken extends Item implements ICustomTooltip {
+    @Override
+    public void appendHoverText(ItemStack stack, Level level, List<Component> tooltip, TooltipFlag flag) {
+        tooltip.add(Component.literal("Squeak").withStyle(ChatFormatting.GOLD));
+    }
 
-	public ItemRubberChicken() {
-		super();
-		this.maxStackSize = 1;
-	}
+    @Override
+    public boolean onLeftClickEntity(ItemStack stack, Player player, Entity entity) {
+        player.level().playSound(null, entity.blockPosition(), SoundEvents.CHICKEN_HURT, SoundSource.PLAYERS,
+                player.level().random.nextFloat() + 0.5F, player.level().random.nextFloat() * 0.5F + 0.75F);
+        return true;
+    }
 
-	@Override
-	public ItemStack[] getTooltipRecipe(ItemStack stack) {
-		if (!OreDictionary.getOres("itemRubber").isEmpty()) {
-			ItemStack rubber = OreDictionary.getOres("itemRubber").get(0);
-			return new ItemStack[] {null, rubber, null,
-					rubber, new ItemStack(Items.CHICKEN), rubber,
-					null, rubber, null};
-		}
-		else 
-			return null;
-	}
-
-	@Override
-	@SideOnly(Side.CLIENT)
-	public void addInformation(ItemStack stack, World world, List<String> tooltip, ITooltipFlag advanced) {
-		TooltipHelper.addTooltipText(tooltip, 
-				new String[] {TextFormatting.GOLD+"Squeak"}, new String[0]);
-	}
-
-	@Override
-	public boolean onLeftClickEntity(ItemStack stack, EntityPlayer player, Entity entity) {
-		player.world.playSound(player, entity.getPosition(), ModSoundEvents.RUBBER_CHICKEN, SoundCategory.PLAYERS, 
-				player.world.rand.nextFloat()+0.5f, player.world.rand.nextFloat()*0.5f+0.75f);
-		return true;
-	}
-
-	@Override
-	public ActionResult<ItemStack> onItemRightClick(World world, EntityPlayer player, EnumHand hand) {
-		player.world.playSound(player, player.getPosition(), ModSoundEvents.RUBBER_CHICKEN, SoundCategory.PLAYERS, 
-				player.world.rand.nextFloat()+0.5f, player.world.rand.nextFloat()*0.5f+0.75f);
-		return new ActionResult(EnumActionResult.SUCCESS, player.getHeldItem(hand));
-	}
+    @Override
+    public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
+        level.playSound(null, player.blockPosition(), SoundEvents.CHICKEN_HURT, SoundSource.PLAYERS,
+                level.random.nextFloat() + 0.5F, level.random.nextFloat() * 0.5F + 0.75F);
+        return InteractionResultHolder.sidedSuccess(player.getItemInHand(hand), level.isClientSide);
+    }
 }
