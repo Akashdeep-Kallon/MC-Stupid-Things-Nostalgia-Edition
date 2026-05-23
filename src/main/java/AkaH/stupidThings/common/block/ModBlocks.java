@@ -1,81 +1,25 @@
-package furgl.stupidThings.common.block;
+package AkaH.stupidThings.common.block;
 
-import java.util.ArrayList;
-
-import furgl.stupidThings.common.StupidThings;
-import furgl.stupidThings.common.config.Config;
-import net.minecraft.block.Block;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.block.model.ModelResourceLocation;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemBlock;
-import net.minecraftforge.event.RegistryEvent;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.registries.IForgeRegistry;
-
+import AkaH.stupidThings.StupidThingsMod;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockBehaviour;
+import net.minecraftforge.registries.DeferredRegister;
+import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraftforge.registries.RegistryObject;
 
 public class ModBlocks {
+    public static final DeferredRegister<Block> BLOCKS = DeferredRegister.create(ForgeRegistries.BLOCKS, StupidThingsMod.MOD_ID);
 
-	public static ArrayList<Block> allBlocks = new ArrayList<Block>();
+    public static final RegistryObject<Block> REVERSE_TNT = register("reverse_tnt");
+    public static final RegistryObject<Block> RAIL_EXPLOSIVE = register("rail_explosive");
+    public static final RegistryObject<Block> COOLER = register("cooler");
+    public static final RegistryObject<Block> HEATER = register("heater");
+    public static final RegistryObject<Block> GRAVITY_ACCELERATOR = register("gravity_accelerator");
+    public static final RegistryObject<Block> PET_ROCK = register("pet_rock");
+    public static final RegistryObject<Block> MINE_TURTLE = register("mine_turtle");
+    public static final RegistryObject<Block> HIDDEN_LIGHT = BLOCKS.register("hidden_light", () -> new Block(BlockBehaviour.Properties.of().lightLevel(s -> 15).noOcclusion()));
 
-	public static ArrayList<ItemBlock> itemBlocksToAddToTab = new ArrayList<ItemBlock>();
-
-	public static final Block REVERSE_TNT = new BlockReverseTnt();
-	public static final Block EXPLOSIVE_RAIL = new BlockRailExplosive();
-	public static final Block COOLER = new BlockCooler();
-	public static final Block HEATER = new BlockHeater();
-	public static final Block GRAVITY_ACCELERATOR = new BlockGravityAccelerator();
-	public static final Block PET_ROCK = new BlockPetRock();
-	public static final Block MINE_TURTLE = new BlockMineTurtle();
-	public static final Block HIDDEN_LIGHT = new BlockHiddenLight();
-
-	@Mod.EventBusSubscriber
-	public static class RegistrationHandler {
-
-		@SubscribeEvent
-		public static void registerBlocks(final RegistryEvent.Register<Block> event) {
-			register(event.getRegistry(), REVERSE_TNT, "reverse_tnt", true, true);
-			register(event.getRegistry(), EXPLOSIVE_RAIL, "rail_explosive", true, true);
-			register(event.getRegistry(), COOLER, "cooler", true, true);
-			register(event.getRegistry(), HEATER, "heater", true, true);
-			register(event.getRegistry(), GRAVITY_ACCELERATOR, "gravity_accelerator", true, true);
-			register(event.getRegistry(), PET_ROCK, "pet_rock", true, true);
-			register(event.getRegistry(), MINE_TURTLE, "mine_turtle", true, true);
-			register(event.getRegistry(), HIDDEN_LIGHT, "hidden_light", true, true);
-		}
-
-		private static void register(IForgeRegistry<Block> registry, Block block, String blockName, boolean addToTab, boolean checkIfDisabled) {
-			if (checkIfDisabled && !Config.isNameEnabled(blockName)) 
-				return;
-
-			allBlocks.add(block);
-			block.setRegistryName(StupidThings.MODID, blockName);
-			block.setTranslationKey(block.getRegistryName().getPath()); 
-			registry.register(block);
-			if (addToTab) {
-				itemBlocksToAddToTab.add(new ItemBlock(block));
-				block.setCreativeTab(StupidThings.tab);
-			}
-		}
-
-		@SubscribeEvent
-		public static void registerItems(final RegistryEvent.Register<Item> event) {
-			for (Block block : allBlocks) {
-				ItemBlock itemBlock = new ItemBlock(block);
-				event.getRegistry().register(itemBlock.setRegistryName(block.getRegistryName()));
-			}
-
-			for (ItemBlock itemBlock : ModBlocks.itemBlocksToAddToTab)
-				itemBlock.getSubItems(StupidThings.tab, StupidThings.tab.orderedStacks);
-		}
-
-	}
-
-	public static void registerRenders() {
-		for (Block block : allBlocks)
-			Minecraft.getMinecraft().getRenderItem().getItemModelMesher().register(Item.getItemFromBlock(block), 0, 
-					new ModelResourceLocation(StupidThings.MODID + ":" + block.getRegistryName().getPath(), "inventory"));	
-	}
-
+    private static RegistryObject<Block> register(String id) {
+        return BLOCKS.register(id, () -> new Block(BlockBehaviour.Properties.of()));
+    }
 }
