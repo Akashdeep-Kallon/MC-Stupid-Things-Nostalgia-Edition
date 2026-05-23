@@ -1,0 +1,45 @@
+{
+    "balloon_inflate":
+    {
+        "category": "player",
+        "sounds":
+        [
+            "stupidthings:balloon_inflate"
+        ]
+    },
+        "balloon_pop":
+    {
+        "category": "entity",
+        "sounds":
+        [
+            "stupidthings:balloon_pop"
+        ]
+    },
+        "rubber_chicken":
+    {
+        "category": "entity",
+        "sounds":
+        [
+            "stupidthings:rubber_chicken"
+        ]
+    },
+   		"mine_turtle":
+    {
+    	"category": "block",
+    	"sounds":
+    	[
+    		"stupidthings:mine_turtle"
+    	]
+    },
+   		"worlds_smallest_violin":
+    {
+    	"category": "player",
+    	"sounds":
+    	[
+          {
+            "name": "stupidthings:worlds_smallest_violin",
+            "stream": true 
+          }
+    	]
+    }
+}
